@@ -104,11 +104,17 @@ class domain_membership (
   #
   $command = "(Get-WmiObject -Class Win32_ComputerSystem).JoinDomainOrWorkGroup('${domain}',${_password},'${username}@${_user_domain}',${_machine_ou},${join_options})"
 
+  # exec { 'join_domain':
+  #   command  => "exit ${command}.ReturnValue",
+  #   unless   => "if((Get-WmiObject -Class Win32_ComputerSystem).domain -ne '${domain}'){ exit 1 }",
+  #   provider => powershell,
+  # }
+  
   exec { 'join_domain':
-    command  => "exit ${command}.ReturnValue",
-    unless   => "if((Get-WmiObject -Class Win32_ComputerSystem).domain -ne '${domain}'){ exit 1 }",
+    command  => "echo (Get-WmiObject -Class Win32_ComputerSystem).domain; echo $_domain; if ((Get-WmiObject -Class Win32_ComputerSystem).domain -ne '${_domain}'){ echo not_equals }else{ echo equals }",
     provider => powershell,
-  }
+    logoutput => true,
+  } 
 
   if $resetpw {
     exec { 'reset_computer_trust':
