@@ -111,7 +111,7 @@ class domain_membership (
   # }
   
   exec { 'join_domain':
-    command  => "echo (Get-WmiObject -Class Win32_ComputerSystem).domain; echo $_domain; if ((Get-WmiObject -Class Win32_ComputerSystem).domain -ne '${_domain}'){ echo not_equals }else{ echo equals }",
+    command  => "echo SIMPLE",
     provider => powershell,
     logoutput => true,
   } 
