@@ -105,7 +105,8 @@ class domain_membership (
   $command = "(Get-WmiObject -Class Win32_ComputerSystem).JoinDomainOrWorkGroup('${domain}','${_password}','${username}@${_user_domain}',${_machine_ou},${join_options})"
 
   exec { 'join_domain':
-    command  => "exit ${command}.ReturnValue",
+    # command  => "exit ${command}.ReturnValue",
+    command  => "(Get-WmiObject -Class Win32_ComputerSystem).domain",
     unless   => "if((Get-WmiObject -Class Win32_ComputerSystem).domain -ne '${domain}'){ exit 1 }",
     provider => powershell,
   }
